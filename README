@@ -1,0 +1,35 @@
+A heat propagation computation program
+ 
+This program can be compiled using CMake (minimum version 1.8). Simple
+build can be done by 'mkdir build && cd build && cmake .. && make'.
+Installing can then be performed with 'make install'. See http://cmake.org
+for more details on CMake.
+
+To run it do "./heat nx ny iter_max save" where:
+  nx and ny are the number of discretisation points in X and Y
+  iter_max  is the maximal number of iterations in temporal loop
+  save      is a boolean flag (1 or 0) telling wether to save the state of
+            the matrix after each iteration
+
+Actually the program propagate on a (nx + 2) x (ny + 2) matrix the mean value
+using a cross stencil at each iteration. So, for each x in [1..nx] and y
+in [1..ny]:
+
+m_{i+1}(x,y) = wx * (m_i(x-1,y) + m_i(x+1,y))
+	     + wy * (m_i(x,y-1) + m_i(x,y+1))
+	     + d * m_i(x, y)
+where wx = dt / hx ^ 2 and wy = dt / hy ^ 2 (hx and hy are the precision of the
+derivation over x and y), d = 1 - 2 * wx - 2 * wy.
+
+So, if you call the software by "./heat 10 10 12 1" it will do 12 iterations
+with a 10x10 matrix and produce 12 files "log_00001" to "log_00012"
+containing the state of the matrix after each iteration. It should output
+something like:
+$ ./heat 10 10 12 1
+it = 0, t = 0.000e+00, err = 1.732e+00
+it = 10, t = 2.500e-02, err = 2.518e-01
+
+To convert the resulting "log_XXXXX" files, you can use the heat_plot.py
+script (simply run it with "python heat_plot.py") and it will generates
+"XXXXX.png" files and a heat.avi video that you can watch. This python script
+requires the FFMPEG library and the python library called matplotlib.

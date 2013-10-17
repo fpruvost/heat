@@ -1,0 +1,56 @@
+/*!
+@mainpage A heat propagation computation program
+
+The heat propagation computation program computes the heat propagation equation
+approximation using an iterative approach. This file decribes how the program
+works.
+
+@section Installation
+
+
+This program can be compiled using CMake (minimum version 1.8). Simple
+build can be done by @code mkdir build && cd build && cmake .. && make @endcode.
+Installing can then be performed with @code make install @endcode. See http://cmake.org
+for more details on CMake.
+
+@section Usage
+
+To run it do @code ./heat nx ny iter_max save @endcode where:
+ @li @e nx and @e ny are the number of discretisation points in X and Y
+ @li @e iter_max  is the maximal number of iterations in temporal loop
+ @li @e save      is a boolean flag (1 or 0) telling wether to save the state of
+            the matrix after each iteration
+
+Actually the program propagates on a (@e nx + 2) x (@e ny + 2) matrix
+the mean value using a cross stencil at each iteration.
+So,
+
+\f$\forall x \in [1 \dots nx], y \in [1 \dots ny], \forall i \geq 0
+
+m_{i+1}(x,y) = w_x (m_i(x-1,y) + m_i(x+1,y))
+	     + w_y (m_i(x,y-1) + m_i(x,y+1))
+	     + d m_i(x, y)
+
+\ where\ 
+w_x = \frac{dt}{h_x^2}, w_y = \frac{d_t}{hy^2}, d = 1 - 2 w_x - 2 w_y
+\f$
+
+where @e hx and @e hy are the precision of the derivation over @e x and @e y.
+
+So, if you call the software by @"./heat 10 10 12 1" it will do 12 iterations
+with a 10x10 matrix and produce 12 files "log_00001" to "log_00012"
+containing the state of the matrix after each iteration. It should output
+something like:
+@code
+$ ./heat 10 10 12 1
+it = 0, t = 0.000e+00, err = 1.732e+00
+it = 10, t = 2.500e-02, err = 2.518e-01
+@endcode
+
+\section Conversion of the output to video
+
+To convert the resulting "log_XXXXX" files, you can use the heat_plot.py
+script (simply run it with "python heat_plot.py") and it will generates
+"XXXXX.png" files and a heat.avi video that you can watch. This python script
+requires the FFMPEG library and the python library called matplotlib.
+*/
