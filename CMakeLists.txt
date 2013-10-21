@@ -40,3 +40,10 @@ add_test(patcHeatSeqUsage ./patcHeatSeq)
 set_tests_properties (patcHeatSeqUsage PROPERTIES PASS_REGULAR_EXPRESSION "Usage*")
 add_test(patcHeatSeq10Err ./patcHeatSeq 10 10 0 0)
 set_tests_properties (patcHeatSeq10Err PROPERTIES PASS_REGULAR_EXPRESSION "1.118")
+
+# Support for building a package
+set(CPACK_PACKAGE_NAME patcHeat)
+set(CPACK_SOURCE_IGNORE_FILES "/build/" "/.*\\\\.swp$")
+set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "patcHeat")
+include (CPack)
